@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Matchs</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">⚽ Ligue</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/equipes">Équipes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/classement">Classement</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/matchs">Matchs</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <h2 class="mt-4">Ajouter un match</h2>
+        <form action="{{ url_for('matchs') }}" method="POST" class="mb-4">
+            <div class="mb-3">
+                <label for="equipe_domicile" class="form-label">Équipe domicile</label>
+                <select name="equipe_domicile" id="equipe_domicile" class="form-select">
+                    {% for equipe in equipes %}
+                        <option value="{{ equipe[0] }}">{{ equipe[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="equipe_exterieur" class="form-label">Équipe extérieur</label>
+                <select name="equipe_exterieur" id="equipe_exterieur" class="form-select">
+                    {% for equipe in equipes %}
+                        <option value="{{ equipe[0] }}">{{ equipe[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="score_domicile" class="form-label">Score domicile</label>
+                <input type="number" name="score_domicile" id="score_domicile" class="form-control" min="0" required>
+            </div>
+            <div class="mb-3">
+                <label for="score_exterieur" class="form-label">Score extérieur</label>
+                <input type="number" name="score_exterieur" id="score_exterieur" class="form-control" min="0" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
+
+        <h2>Liste des matchs</h2>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Équipe domicile</th>
+                    <th>Score domicile</th>
+                    <th>Équipe extérieur</th>
+                    <th>Score extérieur</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in matchs %}
+                    <tr>
+                        <td>{{ match[1] }}</td>
+                        <td>{{ match[2] }}</td>
+                        <td>{{ match[3] }}</td>
+                        <td>{{ match[4] }}</td>
+                        <td>
+                            <form action="/supprimer_match/{{ match[0] }}" method="POST">
+                                <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">Aucun match enregistré.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
